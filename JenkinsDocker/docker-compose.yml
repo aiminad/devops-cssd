@@ -1,0 +1,17 @@
+name: JenkinsDocker
+services:
+  jenkins:
+    build:
+      context: ./
+    privileged: true
+    user: root
+    ports:
+      - 8080:8080
+      - 50000:50000
+    container_name: jenkins
+    volumes:
+      - jenkins_configuration:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  jenkins_configuration:

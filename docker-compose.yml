@@ -1,0 +1,52 @@
+#version: '3.8'
+
+name: docker-training-code
+
+services:
+  mysql:
+    image: mysql:oraclelinux9
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - mynetwork
+    volumes:
+      - ./dbvolume:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./DevopsClass/DevopsClass
+    restart: always
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    
+    depends_on:
+      - mysql
+      - frontend
+    ports:
+      - "8000:8000"
+    networks:
+      - mynetwork
+
+
+  frontend:
+    build:
+      context: ./DevopsClassFront
+    restart: always
+    ports:
+      - "81:80"
+    networks:
+      - mynetwork  
+    volumes:
+      - ./DevopsClassFront/dist:/usr/share/nginx/html
+
+networks:
+  mynetwork:
+    driver: bridge
+
