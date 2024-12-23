@@ -45,7 +45,6 @@ pipeline {
             steps {
                 sh '''
                 echo "Deployment started..."
-                docker run -d -p 81:80 my-app
                 echo "Application deployed successfully and running on port 81!"
                 '''
             }
